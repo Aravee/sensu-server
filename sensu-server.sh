@@ -246,7 +246,7 @@ then
     						### ---- InfluxDB Time series database - Installation Begins ---- ###
 
     echo -e "$GREEN $TAB  $DEC Installing InfluxDB Server for - $OS $RDEC $NL"
-    wget https://dl.influxdata.com/influxdb/releases/influxdb_1.2.4_amd64.deb
+    sudo wget https://dl.influxdata.com/influxdb/releases/influxdb_1.2.4_amd64.deb
 	sleep 2
 
 	sudo dpkg -i influxdb_1.2.4_amd64.deb
@@ -264,6 +264,8 @@ then
 
     					### ---- Enabling Admin Interface for InfluxDB Time series database ---- ###
     
+    sudo sed -i '189s/# enabled = false/enabled = true/' /etc/influxdb/influxdb.conf
+    sudo sed -i '192s/# bind-address = ":8083"/bind-address = ":8083"/' /etc/influxdb/influxdb.conf 
 
 
 
