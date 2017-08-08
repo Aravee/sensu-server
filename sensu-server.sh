@@ -43,14 +43,14 @@ then
 
 	sudo touch /etc/sensu/conf.d/transport.json && sudo touch /etc/sensu/conf.d/api.json
 
-	echo '{
+	sudo echo '{
   			"transport": {
     		"name": "rabbitmq",
     		"reconnect_on_error": true
   			}
 		}' > /etc/sensu/conf.d/transport.json
 
-	echo '{
+	sudo echo '{
   			"api": {
     		"host": "localhost",
     		"bind": "0.0.0.0",
@@ -85,7 +85,7 @@ then
 	echo -e "$RED $TAB $DEC Redis-server Automated Configurations $RDEC $NL"
 	sudo touch /etc/sensu/conf.d/redis.json
 
-	echo '{
+	sudo echo '{
   			"redis": {
     		"host": "127.0.0.1",
     		"port": 6379
@@ -181,24 +181,22 @@ then
 
 	sudo systemctl enable uchiwa && sudo systemctl start uchiwa
 
-	sudo touch /etc/sensu/uchiwa.json
+	sudo touch /etc/sensu/uchiwa.json && > /etc/sensu/uchiwa.json
 
-	echo '{
+	sudo echo '{
       	"sensu": [
             {
           "name": "sensu",
           "host": "localhost",
-          "user": "admin",
-          "pass": "admin",
           "port": 4567,
           "timeout": 10
             }
           ],
         "uchiwa": {
             "host": "0.0.0.0",
-            "port": 3000,
+            "port": 8080,
             "user": "admin",
-            "user": "admin",
+            "pass": "admin",
             "refresh": 10
           }
 		}' > /etc/sensu/uchiwa.json
@@ -218,6 +216,59 @@ then
     fi
 
     							### ---- Uchiwa Dashboard - Installation Ends ---- ###
+
+
+    						### ---- Grafana Metrics Dashboard - Installation Begins ---- ###
+
+
+    echo -e "$GREEN $TAB  $DEC Installing Grafana for - $OS $RDEC $NL"
+    wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana_4.4.3_amd64.deb
+    sudo apt-get install -y adduser libfontconfig
+	sudo dpkg -i grafana_4.4.3_amd64.deb
+	sleep 2
+
+	sudo systemctl enable grafana-server && sudo systemctl start grafana-server && sudo systemctl status grafana-server
+
+	if [[ $? -eq 0 ]]
+        then
+        	echo -e "$GREEN $TAB Grafana Dashboard successfully installed & Enabled On Boot Time...! $NL"
+        else
+        	echo -e "$RED $TAB Grafana Dashboard Installation Has Failed Please Retry...! $NL"
+    fi
+
+    						### ---- Grafana Metrics Dashboard - Installation Ends ---- ###
+
+    			################## ---- Configurations are pending for grafana installation ------ #################
+
+
+
+
+    						### ---- InfluxDB Time series database - Installation Begins ---- ###
+
+    echo -e "$GREEN $TAB  $DEC Installing InfluxDB Server for - $OS $RDEC $NL"
+    wget https://dl.influxdata.com/influxdb/releases/influxdb_1.2.4_amd64.deb
+	sleep 2
+
+	sudo dpkg -i influxdb_1.2.4_amd64.deb
+
+	sudo systemctl enable influxdb && sudo systemctl start influxdb && sudo systemctl status influxdb
+
+	if [[ $? -eq 0 ]]
+        then
+        	echo -e "$GREEN $TAB InfluxDB  successfully installed & Enabled On Boot Time...! $NL"
+        else
+        	echo -e "$RED $TAB InfluxDB  Installation Has Failed Please Retry...! $NL"
+    fi
+
+    						### ---- InfluxDB Time series database - Installation Ends ---- ###
+
+    					### ---- Enabling Admin Interface for InfluxDB Time series database ---- ###
+    
+
+
+
+
 else
 	echo -e "not running on linux"
 fi
+
