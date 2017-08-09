@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # --- Colors & Tabbing --- #
 RED="\e[31m"
 GREEN="\e[32m"
@@ -266,7 +265,7 @@ then
     
     sudo sed -i '189s/# enabled = false/enabled = true/' /etc/influxdb/influxdb.conf
     sudo sed -i '192s/# bind-address = ":8083"/bind-address = ":8083"/' /etc/influxdb/influxdb.conf 
-
+    sudo systemctl restart influxdb
 
 
 
